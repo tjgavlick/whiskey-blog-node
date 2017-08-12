@@ -146,4 +146,10 @@ router.get('/posts/unpublish/:id', auth.requireSession, function (req, res, next
 });
 
 
+// view files on disk
+router.get('/files', function (req, res, next) {
+  return res.render('../views/admin/files.twig');
+});
+
+
 module.exports = router;
