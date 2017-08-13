@@ -11,17 +11,21 @@
       <span class="page-title__container">Files</span>
     </h1>
 
+    {% if parentPath %}
+      <a href="{{ parentPath }}">..</a>
+    {% endif %}
+
     <ul class="file-listing file-listing--grid">
       {% for folder in folders %}
         <li class="file-listing__file">
-          {{ folder.filename }}
+          <a href="{{ folderPath }}{{ folder.filename }}">{{ folder.filename }}</a>
         </li>
       {% endfor %}
 
       {% for file in files %}
         <li class="file-listing__file">
           {% if file.isImage %}
-            <img src="{{ dir }}{{ file.filename }}" alt="" />
+            <img src="{{ filePath }}{{ file.filename }}" alt="" />
           {% endif %}
           {{ file.filename }}
         </li>

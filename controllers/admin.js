@@ -174,15 +174,17 @@ function getFiles(dir) {
       let files = [], folders = [];
 
       for (const entry of listing) {
-        if (fs.statSync(dir + entry).isDirectory()) {
-          folders.push({
-            filename: entry
-          });
-        } else {
-          files.push({
-            filename: entry,
-            isImage: imageExtensions.includes(entry.split('.').pop().toLowerCase())
-          });
+        if (entry.substr(0, 1) !== '.') {
+          if (fs.statSync(dir + '/' + entry).isDirectory()) {
+            folders.push({
+              filename: entry
+            });
+          } else {
+            files.push({
+              filename: entry,
+              isImage: imageExtensions.includes(entry.split('.').pop().toLowerCase())
+            });
+          }
         }
       }
 
@@ -201,28 +203,27 @@ function getFiles(dir) {
       };
     });
 }
-router.get('/files', function (req, res, next) {
-  const uploadsDir = 'public/uploads/';
-  getFiles(uploadsDir)
-    .then(result => {
-      return res.render('../views/admin/files.twig', {
-        files: result.files,
-        folders: result.folders,
-        dir: uploadsDir.replace(/^public/, '')
-      });
-    })
-    .catch(next);
-});
-router.get('/files/*', function (req, res, next) {
-  const uploadsDir = 'public/uploads/',
-        subpath = req.path.replace(/^\/files\//, '') + '/';
+router.get('/files/?*', function (req, res, next) {
+  const uploadsDir = 'public/uploads',
+        uploadsUrl = '/uploads',
+        subpath = decodeURIComponent(req.path.replace(/^\/files\/?/, '')).replace(/\/$/, '');
+  let parentPath = null;
 
-  getFiles(uploadsDir + subpath)
+  if (subpath) {
+    parentPath = '/admin/files/' + subpath.split('/').slice(0,-1).join('/');
+  }
+
+  getFiles([uploadsDir, subpath].filter(el => !!el).join('/'))
     .then(result => {
       return res.render('../views/admin/files.twig', {
         files: result.files,
         folders: result.folders,
-        dir: uploadsDir.replace(/^public/, '') + subpath
+        // base path for clickable subfolders
+        folderPath: (req.originalUrl + '/').replace(/\/\/$/, '/'),
+        // base path for image previews
+        filePath: [uploadsUrl, subpath].filter(el => !!el).join('/') + '/',
+        // path for 'up one level' links
+        parentPath: parentPath
       });
     })
     .catch(next);
