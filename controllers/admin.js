@@ -4,6 +4,7 @@ const fs = require('fs'),
       router = express.Router(),
       auth = require('../middleware/auth'),
       bodyParser = require('body-parser'),
+
       Review = require('../models/review/review'),
       Post = require('../models/post/post'),
       Distillery = require('../models/distillery/distillery'),
@@ -154,7 +155,8 @@ router.get('/posts/unpublish/:id', auth.requireSession, function (req, res, next
 
 // view files on disk
 router.get('/files', function (req, res, next) {
-  const uploadsDir = 'public/uploads/';
+  const uploadsDir = 'public/uploads/',
+        imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webm'];
 
   readdir(uploadsDir)
     .then(listing => {
@@ -164,17 +166,28 @@ router.get('/files', function (req, res, next) {
         if (fs.statSync(uploadsDir + entry).isDirectory()) {
           folders.push(entry);
         } else {
-          files.push(entry);
+          files.push([
+            entry,
+            imageExtensions.includes(entry.split('.').pop().toLowerCase())
+          ]);
         }
       }
 
       files.sort();
-      folders.sort();
+      folders.sort((a, b) => {
+        if (a[0].toLowerCase() < b[0].toLowerCase()) {
+          return -1;
+        } else if (a[0].toLowerCase() > b[0].toLowerCase()) {
+          return 1;
+        } else {
+          return 0;
+        }
+      });
 
       return res.render('../views/admin/files.twig', {
         files: files,
         folders: folders,
-        dir: uploadsDir.replace(/^public\//, '')
+        dir: uploadsDir.replace(/^public/, '')
       });
     })
     .catch(next);

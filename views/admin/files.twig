@@ -20,7 +20,10 @@
 
       {% for file in files %}
         <li class="file-listing__file">
-          {{ file }}
+          {% if file[1] %}
+            <img src="{{ dir }}{{ file[0] }}" alt="" />
+          {% endif %}
+          {{ file[0] }}
         </li>
       {% endfor %}
     </ul>
