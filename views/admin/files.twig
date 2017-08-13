@@ -11,5 +11,19 @@
       <span class="page-title__container">Files</span>
     </h1>
 
+    <ul class="file-listing file-listing--grid">
+      {% for folder in folders %}
+        <li class="file-listing__file">
+          {{ folder }}
+        </li>
+      {% endfor %}
+
+      {% for file in files %}
+        <li class="file-listing__file">
+          {{ file }}
+        </li>
+      {% endfor %}
+    </ul>
+
   </section>
 {% endblock %}

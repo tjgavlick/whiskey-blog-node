@@ -1,4 +1,6 @@
-const express = require('express'),
+const fs = require('fs'),
+      util = require('util'),
+      express = require('express'),
       router = express.Router(),
       auth = require('../middleware/auth'),
       bodyParser = require('body-parser'),
@@ -7,9 +9,13 @@ const express = require('express'),
       Distillery = require('../models/distillery/distillery'),
       DrinkType = require('../models/drink-type/drink-type'),
       Rarity = require('../models/rarity/rarity'),
-      Region = require('../models/region/region');
+      Region = require('../models/region/region'),
+
+      readdir = util.promisify(fs.readdir);
+
 
 router.use(bodyParser.urlencoded({ extended: false }));
+
 
 // admin landing page, showing actions and user's items
 router.get('/', auth.requireSession, auth.getCurrentUser, function (req, res, next) {
@@ -148,7 +154,30 @@ router.get('/posts/unpublish/:id', auth.requireSession, function (req, res, next
 
 // view files on disk
 router.get('/files', function (req, res, next) {
-  return res.render('../views/admin/files.twig');
+  const uploadsDir = 'public/uploads/';
+
+  readdir(uploadsDir)
+    .then(listing => {
+      let files = [], folders = [];
+
+      for (const entry of listing) {
+        if (fs.statSync(uploadsDir + entry).isDirectory()) {
+          folders.push(entry);
+        } else {
+          files.push(entry);
+        }
+      }
+
+      files.sort();
+      folders.sort();
+
+      return res.render('../views/admin/files.twig', {
+        files: files,
+        folders: folders,
+        dir: uploadsDir.replace(/^public\//, '')
+      });
+    })
+    .catch(next);
 });
 
 
