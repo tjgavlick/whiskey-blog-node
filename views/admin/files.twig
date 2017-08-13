@@ -14,16 +14,16 @@
     <ul class="file-listing file-listing--grid">
       {% for folder in folders %}
         <li class="file-listing__file">
-          {{ folder }}
+          {{ folder.filename }}
         </li>
       {% endfor %}
 
       {% for file in files %}
         <li class="file-listing__file">
-          {% if file[1] %}
-            <img src="{{ dir }}{{ file[0] }}" alt="" />
+          {% if file.isImage %}
+            <img src="{{ dir }}{{ file.filename }}" alt="" />
           {% endif %}
-          {{ file[0] }}
+          {{ file.filename }}
         </li>
       {% endfor %}
     </ul>

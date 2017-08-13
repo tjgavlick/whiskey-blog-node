@@ -153,41 +153,76 @@ router.get('/posts/unpublish/:id', auth.requireSession, function (req, res, next
 });
 
 
-// view files on disk
-router.get('/files', function (req, res, next) {
-  const uploadsDir = 'public/uploads/',
-        imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webm'];
+// view files on disk in uploads directory
+function getFiles(dir) {
+  const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webm'];
 
-  readdir(uploadsDir)
+  function sortFilenames(a, b) {
+    let aName = a.filename.toLowerCase(),
+        bName = b.filename.toLowerCase();
+    if (aName < bName) {
+      return -1;
+    } else if (aName > bName) {
+      return 1;
+    } else {
+      return 0;
+    }
+  }
+
+  return readdir(dir)
     .then(listing => {
       let files = [], folders = [];
 
       for (const entry of listing) {
-        if (fs.statSync(uploadsDir + entry).isDirectory()) {
-          folders.push(entry);
+        if (fs.statSync(dir + entry).isDirectory()) {
+          folders.push({
+            filename: entry
+          });
         } else {
-          files.push([
-            entry,
-            imageExtensions.includes(entry.split('.').pop().toLowerCase())
-          ]);
+          files.push({
+            filename: entry,
+            isImage: imageExtensions.includes(entry.split('.').pop().toLowerCase())
+          });
         }
       }
 
-      files.sort();
-      folders.sort((a, b) => {
-        if (a[0].toLowerCase() < b[0].toLowerCase()) {
-          return -1;
-        } else if (a[0].toLowerCase() > b[0].toLowerCase()) {
-          return 1;
-        } else {
-          return 0;
-        }
-      });
+      files.sort(sortFilenames);
+      folders.sort(sortFilenames);
 
-      return res.render('../views/admin/files.twig', {
+      return {
         files: files,
-        folders: folders,
+        folders: folders
+      };
+    })
+    .catch(err => {
+      return {
+        files: [],
+        folders: []
+      };
+    });
+}
+router.get('/files', function (req, res, next) {
+  const uploadsDir = 'public/uploads/';
+  getFiles(uploadsDir)
+    .then(result => {
+      return res.render('../views/admin/files.twig', {
+        files: result.files,
+        folders: result.folders,
         dir: uploadsDir.replace(/^public/, '')
+      });
+    })
+    .catch(next);
+});
+router.get('/files/*', function (req, res, next) {
+  const uploadsDir = 'public/uploads/',
+        subpath = req.path.replace(/^\/files\//, '') + '/';
+
+  getFiles(uploadsDir + subpath)
+    .then(result => {
+      return res.render('../views/admin/files.twig', {
+        files: result.files,
+        folders: result.folders,
+        dir: uploadsDir.replace(/^public/, '') + subpath
       });
     })
     .catch(next);
