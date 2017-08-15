@@ -97,3 +97,48 @@
     }
   }
 }
+
+.file-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  justify-content: space-between;
+  margin: 0 -$line/2 0 0;
+  list-style: none;
+  &__item {
+    flex: 1 0 150px;
+    margin: 0 $line/2 $line/2 0;
+    padding: $line/2;
+    background: rgba(255,255,255,0.3);
+    border: 1px solid $bg-light;
+  }
+  &__preview {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    justify-content: space-between;
+    img {
+      max-height: 200px;
+    }
+  }
+  &__name {
+    @extend .alternate-typeface;
+    display: block;
+    margin-top: $line/2;
+    font-size: $micro;
+  }
+  &__folder {
+  }
+
+  @media #{$min-s} {
+    &__item {
+      flex: 1 0 200px;
+    }
+  }
+
+  @media #{$min-l} {
+    &__item {
+      flex: 1 0 250px;
+    }
+  }
+}

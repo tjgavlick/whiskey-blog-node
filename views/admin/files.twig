@@ -11,23 +11,38 @@
       <span class="page-title__container">Files</span>
     </h1>
 
-    {% if parentPath %}
-      <a href="{{ parentPath }}">..</a>
-    {% endif %}
 
-    <ul class="file-listing file-listing--grid">
+    <ul class="file-list file-list--grid">
+      {% if parentPath %}
+        <li class="file-list__item">
+          <a class="file-list__preview" href="{{ parentPath }}">
+            <div class="file-list__folder">
+              <img src="/static/dist/images/folder-up.svg" alt="Up one level" />
+            </div>
+            <span class="file-list__name">..</span>
+          </a>
+        </li>
+      {% endif %}
+
       {% for folder in folders %}
-        <li class="file-listing__file">
-          <a href="{{ folderPath }}{{ folder.filename }}">{{ folder.filename }}</a>
+        <li class="file-list__item">
+          <a class="file-list__preview" href="{{ folderPath }}{{ folder.filename }}">
+            <div class="file-list__folder">
+              <img src="/static/dist/images/folder.svg" alt="Navigate to folder:" />
+            </div>
+            <span class="file-list__name">{{ folder.filename }}</span>
+          </a>
         </li>
       {% endfor %}
 
       {% for file in files %}
-        <li class="file-listing__file">
-          {% if file.isImage %}
-            <img src="{{ filePath }}{{ file.filename }}" alt="" />
-          {% endif %}
-          {{ file.filename }}
+        <li class="file-list__item">
+          <a href="{{ filePath }}{{ file.filename }}" target="_blank" class="file-list__preview">
+            {% if file.isImage %}
+              <img src="{{ filePath }}{{ file.filename }}" alt="" />
+            {% endif %}
+            <span class="file-list__name">{{ file.filename }}</span>
+          </a>
         </li>
       {% endfor %}
     </ul>

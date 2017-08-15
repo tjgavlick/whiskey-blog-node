@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="150px" height="150px" viewBox="0 0 150 150" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 43.2 (39069) - http://www.bohemiancoding.com/sketch -->
+    <title>folder-up</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M65.1163891,40.6834482 C66.27383,36.9922817 70.3523374,34 74.2149307,34 L120.997191,34 C124.864735,34 128,37.1258188 128,40.9944363 L128,57 L60,57 L65.1163891,40.6834482 Z" id="path-1"></path>
+        <path d="M22,54.9957852 C22,50.579835 25.5875485,47 29.9998069,47 L120.000193,47 C124.418364,47 128,50.579658 128,54.9957852 L128,109.004215 C128,113.420165 124.412452,117 120.000193,117 L29.9998069,117 C25.5816355,117 22,113.420342 22,109.004215 L22,54.9957852 Z" id="path-2"></path>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="folder-up">
+            <g id="tab">
+                <use fill-opacity="0.15" fill="#0F4246" fill-rule="evenodd" xlink:href="#path-1"></use>
+                <path stroke="#009BA9" stroke-width="4" d="M126,55 L62.7231624,55 L67.0247665,41.281859 L67.0247665,41.281859 C67.9201512,38.4264098 71.2245965,36 74.2149307,36 L120.997191,36 C123.762924,36 126,38.2331443 126,40.9944363 L126,55 Z"></path>
+            </g>
+            <g id="body">
+                <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-2"></use>
+                <path stroke="#009BA9" stroke-width="4" d="M24,54.9957852 C24,51.6868985 26.6896224,49 29.9998069,49 L120.000193,49 C123.314088,49 126,51.6845207 126,54.9957852 L126,109.004215 C126,112.313102 123.310378,115 120.000193,115 L29.9998069,115 C26.685912,115 24,112.315479 24,109.004215 L24,54.9957852 Z"></path>
+            </g>
+            <g id="arrow" transform="translate(65.000000, 63.000000)" stroke="#009BA9" stroke-width="4">
+                <path d="M3.36049866,36.463379 C7.86049107,36.463379 12.8938624,32.5012136 12.8938624,26.9300153 L12.8938624,4.85032319" id="arrow-body"></path>
+                <path d="M5.65188332,8.51747042 L13,2.57257812 L20.3481167,8.51747042 L5.65188332,8.51747042 Z" id="arrow-tip"></path>
+            </g>
+        </g>
+    </g>
+</svg>
