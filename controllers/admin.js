@@ -12,7 +12,8 @@ const fs = require('fs'),
       Rarity = require('../models/rarity/rarity'),
       Region = require('../models/region/region'),
 
-      readdir = util.promisify(fs.readdir);
+      readdir = util.promisify(fs.readdir),
+      unlink = util.promisify(fs.unlink);
 
 
 router.use(bodyParser.urlencoded({ extended: false }));
@@ -203,6 +204,7 @@ function getFiles(dir) {
       };
     });
 }
+
 router.get('/files/?*', function (req, res, next) {
   const uploadsDir = 'public/uploads',
         uploadsUrl = '/uploads',
@@ -227,6 +229,9 @@ router.get('/files/?*', function (req, res, next) {
       });
     })
     .catch(next);
+});
+
+router.delete('/files/*', function (req, res, next) {
 });
 
 
