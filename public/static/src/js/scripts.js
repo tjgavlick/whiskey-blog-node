@@ -24,6 +24,32 @@ var TDW = (function (window, document) {
         return result;
     }
 
+    // quick xhr
+    function xhr(params) {
+        params = _.assign({
+            method: 'GET',
+            data: null,
+            success: null,
+            before: null,
+            after: null
+        }, params);
+
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && typeof params.success === 'function') {
+                params.success(xhr);
+            }
+        }
+        xhr.open(params.method, params.url);
+        if (typeof params.before === 'function') {
+            params.before(xhr);
+        }
+        xhr.send(params.data);
+        if (typeof params.after === 'function') {
+            params.after(xhr);
+        }
+    }
+
 
     /* toggles
      * =======
@@ -329,12 +355,12 @@ var TDW = (function (window, document) {
 
         // send the request and update relevant areas with response
         function getList(url) {
-            var xhr = new XMLHttpRequest(),
-                containers = ['list-active-filters', 'list-link-filters', 'article-list'],
+            var containers = ['list-active-filters', 'list-link-filters', 'article-list'],
                 tmp = document.createElement('div');
 
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4) {
+            xhr({
+                url: url,
+                success: function (xhr) {
                     tmp.innerHTML = xhr.responseText;
                     _.forEach(containers, function (container) {
                         var target = document.getElementById(container),
@@ -348,9 +374,7 @@ var TDW = (function (window, document) {
                     window.history.pushState('', '', url);
                     misc.enhanceFilterSentences();
                 }
-            };
-            xhr.open('GET', url);
-            xhr.send(null);
+            });
         }
 
         function bindClicks(els) {
@@ -465,17 +489,19 @@ var TDW = (function (window, document) {
         // generate automatic markdown previews
         var generateMarkdownPreviews = function () {
             function getPreview(markdown, target) {
-                var xhr = new XMLHttpRequest();
-                xhr.onreadystatechange = function () {
-                    if (xhr.readyState === 4) {
+                xhr({
+                    method: 'POST',
+                    url: '/utility/markdown',
+                    data: 'markdownContent=' + markdown,
+                    before: function (xhr) {
+                        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                    },
+                    success: function (xhr) {
                         target.innerHTML = xhr.responseText;
                         misc.createTableOfContents();
                         misc.nudgeArticleFigures();
                     }
-                };
-                xhr.open('POST', '/utility/markdown', true);
-                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                xhr.send('markdownContent=' + markdown);
+                })
             }
 
             _.forEach(document.querySelectorAll('textarea[data-markdown-preview]'), function (source) {
