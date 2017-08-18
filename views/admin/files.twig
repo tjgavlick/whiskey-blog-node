@@ -19,6 +19,14 @@
       </form>
     </div>
 
+    <div class="create-folder">
+      <form method="POST" class="create-folder__form">
+        <label for="folderName">Create a new folder</label>
+        <input type="text" name="folderName" id="folderName" />
+        <button type="submit" class="button">Create</button>
+      </form>
+    </div>
+
     <ul class="file-list file-list--grid">
       {% if parentPath %}
         <li class="file-list__item">

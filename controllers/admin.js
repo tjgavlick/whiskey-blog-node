@@ -15,6 +15,7 @@ const fs = require('fs'),
 
       upload = multer({ dest: 'public/uploads/', preservePath: true }),
       readdir = util.promisify(fs.readdir),
+      mkdir = util.promisify(fs.mkdir),
       unlink = util.promisify(fs.unlink),
       rename = util.promisify(fs.rename);
 
@@ -246,14 +247,30 @@ router.get('/files/?*', function (req, res, next) {
     .catch(next);
 });
 
-// upload files
+// upload files or create folders
 router.post('/files/?*', upload.array('files'), function (req, res, next) {
-  const subpath = decodeURIComponent(req.path).replace(/^\/files\/?/, '').replace(/\/$/, '');
-  Promise.all(req.files.map(file => rename(file.path, file.destination + subpath + (subpath ? '/' : '') + file.originalname)))
-    .then(() => {
+  const subpath = decodeURIComponent(req.path).replace(/^\/files\/?/, '').replace(/\/$/, ''),
+        reservedNames = ['delete', 'files'];
+  if (req.files) {
+    Promise.all(req.files.map(file => rename(file.path, file.destination + subpath + (subpath ? '/' : '') + file.originalname)))
+      .then(() => {
+        return res.redirect('/admin/files/' + subpath);
+      })
+      .catch(next);
+  } else if (req.body.folderName) {
+    const name = req.body.folderName.replace(/[\/\.:,]/g, '').trim();
+    if (name && !reservedNames.includes(name.toLowerCase())) {
+      mkdir('public/uploads/' + subpath + '/' + name)
+        .then(() => {
+          return res.redirect('/admin/files/' + subpath);
+        })
+        .catch(next);
+    } else {
       return res.redirect('/admin/files/' + subpath);
-    })
-    .catch(next);
+    }
+  } else {
+    return res.redirect('/admin/files/' + subpath);
+  }
 });
 
 
