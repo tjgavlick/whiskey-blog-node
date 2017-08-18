@@ -11,6 +11,13 @@
       <span class="page-title__container">Files</span>
     </h1>
 
+    <div class="file-upload">
+      <form method="POST" class="file-upload__form" enctype="multipart/form-data">
+        <label for="files">Upload files</label>
+        <input type="file" name="files" id="files" multiple="multiple" />
+        <button type="submit" class="button">Upload</button>
+      </form>
+    </div>
 
     <ul class="file-list file-list--grid">
       {% if parentPath %}

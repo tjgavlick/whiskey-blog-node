@@ -4,6 +4,7 @@ const fs = require('fs'),
       router = express.Router(),
       auth = require('../middleware/auth'),
       bodyParser = require('body-parser'),
+      multer = require('multer'),
 
       Review = require('../models/review/review'),
       Post = require('../models/post/post'),
@@ -12,8 +13,10 @@ const fs = require('fs'),
       Rarity = require('../models/rarity/rarity'),
       Region = require('../models/region/region'),
 
+      upload = multer({ dest: 'public/uploads/', preservePath: true }),
       readdir = util.promisify(fs.readdir),
-      unlink = util.promisify(fs.unlink);
+      unlink = util.promisify(fs.unlink),
+      rename = util.promisify(fs.rename);
 
 
 router.use(bodyParser.urlencoded({ extended: false }));
@@ -239,6 +242,16 @@ router.get('/files/?*', function (req, res, next) {
         // path for 'up one level' links
         parentPath: parentPath
       });
+    })
+    .catch(next);
+});
+
+// upload files
+router.post('/files/?*', upload.array('files'), function (req, res, next) {
+  const subpath = decodeURIComponent(req.path).replace(/^\/files\/?/, '').replace(/\/$/, '');
+  Promise.all(req.files.map(file => rename(file.path, file.destination + subpath + (subpath ? '/' : '') + file.originalname)))
+    .then(() => {
+      return res.redirect('/admin/files/' + subpath);
     })
     .catch(next);
 });
