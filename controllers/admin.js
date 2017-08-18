@@ -154,6 +154,18 @@ router.get('/posts/unpublish/:id', auth.requireSession, function (req, res, next
 });
 
 
+// delete a file
+router.get('/files/delete/*', function (req, res, next) {
+  const file = decodeURIComponent(req.path).replace(/^\/files\/delete\//, ''),
+        dir = file.split('/').slice(1, -1).pop() || '';
+  unlink('public/' + file)
+    .then(() => {
+      return res.redirect('/admin/files/' + dir);
+    })
+    .catch(next);
+});
+
+
 // view files on disk in uploads directory
 function getFiles(dir) {
   const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webm'];
@@ -229,9 +241,6 @@ router.get('/files/?*', function (req, res, next) {
       });
     })
     .catch(next);
-});
-
-router.delete('/files/*', function (req, res, next) {
 });
 
 

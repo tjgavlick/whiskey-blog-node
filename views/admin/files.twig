@@ -43,6 +43,7 @@
             {% endif %}
             <span class="file-list__name">{{ file.filename }}</span>
           </a>
+          <a href="/admin/files/delete{{ filePath }}{{ file.filename }}" class="file-list__delete"><img src="/static/dist/images/icon-x.svg" alt="Delete this image" title="Delete" /></a>
         </li>
       {% endfor %}
     </ul>

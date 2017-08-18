@@ -106,11 +106,12 @@
   margin: 0 -$line/2 0 0;
   list-style: none;
   &__item {
-    flex: 1 0 150px;
+    flex: 1 1 150px;
     margin: 0 $line/2 $line/2 0;
     padding: $line/2;
     background: rgba(255,255,255,0.3);
     border: 1px solid $bg-light;
+    position: relative;
   }
   &__preview {
     display: flex;
@@ -125,20 +126,33 @@
     @extend .alternate-typeface;
     display: block;
     margin-top: $line/2;
+    margin-right: $line*2;
     font-size: $micro;
   }
-  &__folder {
+  &__delete {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    padding: $line*3/4;
+    opacity: 0.3;
+    &:hover, &:focus {
+      opacity: 1;
+    }
+    img {
+      display: block;
+      max-width: $line/2;
+    }
   }
 
   @media #{$min-s} {
     &__item {
-      flex: 1 0 200px;
+      flex: 1 1 200px;
     }
   }
 
   @media #{$min-l} {
     &__item {
-      flex: 1 0 250px;
+      flex: 1 1 250px;
     }
   }
 }
