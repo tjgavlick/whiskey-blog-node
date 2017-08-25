@@ -8,7 +8,12 @@
   <section class="content" role="main">
 
     <h1 class="page-title">
-      <span class="page-title__container">Files</span>
+      <span class="page-title__container">
+        Files
+        {% if filePath %}
+          <span class="page-title__links">{{ filePath }}</span>
+        {% endif %}
+      </span>
     </h1>
 
     <div class="file-upload">
