@@ -17,7 +17,8 @@ const fs = require('fs'),
       readdir = util.promisify(fs.readdir),
       mkdir = util.promisify(fs.mkdir),
       unlink = util.promisify(fs.unlink),
-      rename = util.promisify(fs.rename);
+      rename = util.promisify(fs.rename),
+      rmrf = util.promisify(require('rimraf'));
 
 
 router.use(bodyParser.urlencoded({ extended: false }));
@@ -158,15 +159,27 @@ router.get('/posts/unpublish/:id', auth.requireSession, function (req, res, next
 });
 
 
-// delete a file
+// delete a file or folder
 router.get('/files/delete/*', function (req, res, next) {
-  const file = decodeURIComponent(req.path).replace(/^\/files\/delete\//, ''),
-        dir = file.split('/').slice(1, -1).pop() || '';
-  unlink('public/' + file)
-    .then(() => {
-      return res.redirect('/admin/files/' + dir);
-    })
-    .catch(next);
+  const target = decodeURIComponent(req.path).replace(/^\/files\/delete\//, ''),
+        dir = target.split('/').slice(1, -1).pop() || '';
+
+  // files
+  if (/\./.test(target)) {
+    unlink('public/' + target)
+      .then(() => {
+        return res.redirect('/admin/files/' + dir);
+      })
+      .catch(next);
+
+  // directories
+  } else {
+    rmrf('public/' + target)
+      .then(() => {
+        return res.redirect('/admin/files/' + target.replace(/\/$/, '').split('/').slice(1, -1).join('/'));
+      })
+      .catch(next);
+  }
 });
 
 

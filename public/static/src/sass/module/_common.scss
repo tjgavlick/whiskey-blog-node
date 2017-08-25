@@ -78,6 +78,12 @@ a, button {
     display: block;
     width: 100%;
   }
+  &--warn {
+    background: $negative;
+    &:hover, &:focus {
+      background: lighten($negative, 5%);
+    }
+  }
 }
 
 figure {
