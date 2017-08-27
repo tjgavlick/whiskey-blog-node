@@ -103,7 +103,7 @@
   flex-wrap: wrap;
   align-items: stretch;
   justify-content: space-between;
-  margin: 0 -$line/2 0 0;
+  margin: 0 (-$line/2) 0 0;
   list-style: none;
   &__item {
     flex: 1 1 150px;
@@ -155,4 +155,26 @@
       flex: 1 1 250px;
     }
   }
+}
+
+.create-folder {
+  position: relative;
+  padding-right: 10.5em;
+  .button {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
+
+  @media #{$max-s} {
+    padding-right: 5.1em;
+    .button {
+      padding-left: $line/2;
+      padding-right: $line/2;
+    }
+  }
+}
+
+.delete-folder {
+  text-align: center;
 }
