@@ -782,12 +782,25 @@ var TDW = (function (window, document) {
             });
         };
 
+        // confirm deletion of items
+        var confirmDeletions = function () {
+            _.forEach(document.getElementsByClassName('confirm-delete'), function (el) {
+                el.addEventListener('click', function (ev) {
+                    if (!confirm('Really delete?')) {
+                        ev.preventDefault();
+                        return false;
+                    }
+                });
+            });
+        };
+
         return {
             blendListColors: blendListColors,
             nudgeArticleFigures: nudgeArticleFigures,
             createTableOfContents: createTableOfContents,
             createFigureMarkup: createFigureMarkup,
-            enhanceFilterSentences: enhanceFilterSentences
+            enhanceFilterSentences: enhanceFilterSentences,
+            confirmDeletions: confirmDeletions
         };
     })();
 
@@ -816,6 +829,7 @@ var TDW = (function (window, document) {
         misc.createFigureMarkup();
         misc.nudgeArticleFigures();
         misc.blendListColors();
+        misc.confirmDeletions();
 
         forms.focusLabels();
         forms.resizeTextareas();
